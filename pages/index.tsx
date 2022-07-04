@@ -1,23 +1,19 @@
-import { Amplify, API, Auth, withSSRContext } from "aws-amplify";
+import { Amplify, API, Auth, DataStore, withSSRContext } from "aws-amplify";
 import { GRAPHQL_AUTH_MODE } from "@aws-amplify/api-graphql";
 import "@aws-amplify/ui-react/styles.css";
 import awsExports from "../src/aws-exports";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
-import { listPosts } from "../src/graphql/queries";
-import { createPost, deletePost } from "../src/graphql/mutations";
-import { CreatePostMutation } from "../src/API";
+import { Post, PostStatus } from "../src/models";
 import { Authenticator } from "@aws-amplify/ui-react";
+import { createPost, updatePost } from "../src/graphql/mutations";
+import { ModelPostConditionInput } from "../src/API";
+import { listPosts } from "../src/graphql/queries";
 
-Amplify.configure({ ...awsExports, ssr: false });
-
-interface Post {
-  id: string;
-  message: string;
-}
+Amplify.configure(awsExports);
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const SSR = withSSRContext({ req });
@@ -30,8 +26,21 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   };
 };
 
-const Home = ({ _posts = [] }: { _posts: Post[] }) => {
-  const [posts, setPosts] = useState(_posts);
+const Home = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  //   useEffect(() => {
+  //     fetchMessage();
+  //     const subscription = DataStore.observe(Post).subscribe(fetchMessage);
+  //     return () => {
+  //       subscription.unsubscribe();
+  //     };
+  //   }, []);
+
+  async function fetchMessage() {
+    const data = await DataStore.query(Post);
+    setPosts(data);
+  }
 
   const handleCreatePost = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,20 +48,37 @@ const Home = ({ _posts = [] }: { _posts: Post[] }) => {
     const form = new FormData(event.currentTarget);
 
     try {
+      //   const original = (await DataStore.query(
+      //     Post,
+      //     "ecbad2ca-c07e-4682-9471-419f3508aacc"
+      //   )) as Post;
+      //   const result = await DataStore.save(
+      //     Post.copyOf(original, (updated) => {
+      //       updated.title = `title ${Date.now()}`;
+      //     })
+      //   );
+
+      const msg = form.get("message") + "update";
+
+      const cond: ModelPostConditionInput = {
+        title: { ne: msg },
+      };
+
       const result = await API.graphql({
         authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
         query: createPost,
         variables: {
           input: {
-            message: form.get("message"),
+            id: "1c9fee98-82e6-4ea7-8def-f921e6a261b0",
+            title: msg,
+            status: PostStatus.DRAFT,
           },
+          condition: cond,
         },
       });
       if ("data" in result && result.data) {
         const data = result.data.createPost;
-        console.log(data);
-        setPosts([...posts, data]);
-        console.log(posts);
+        // setPosts([...posts, data]);
         //   window.location.href = `/posts/${data.createPost!.id}`;
       }
     } catch (e) {
@@ -66,16 +92,16 @@ const Home = ({ _posts = [] }: { _posts: Post[] }) => {
 
   const allDelete = async () => {
     for (const pp of posts) {
-      const result = await API.graphql({
-        authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
-        query: deletePost,
-        variables: {
-          input: {
-            id: pp.id,
-            _version: 1,
-          },
-        },
-      });
+      //   const result = await API.graphql({
+      //     authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+      //     query: deletePost,
+      //     variables: {
+      //       input: {
+      //         id: pp.id,
+      //         _version: 1,
+      //       },
+      //     },
+      //   });
     }
 
     setPosts([]);
@@ -114,7 +140,7 @@ const Home = ({ _posts = [] }: { _posts: Post[] }) => {
                 // href={`/posts/${post.id}`}
                 key={post.id}
               >
-                <p>{post.message}</p>
+                <p>{post.title}</p>
               </span>
             ))}
           </div>

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-amplify/datastore": "^3.11.3",
     "@aws-amplify/ui-react": "^2.18.3",
     "aws-amplify": "^4.3.24",
     "next": "12.1.6",

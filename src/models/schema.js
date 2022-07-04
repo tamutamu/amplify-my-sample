@@ -1,55 +1,5 @@
 export const schema = {
     "models": {
-        "Todo": {
-            "name": "Todo",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "name": {
-                    "name": "name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "description": {
-                    "name": "description",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "Todos",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                }
-            ]
-        },
         "Post": {
             "name": "Post",
             "fields": {
@@ -60,15 +10,31 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "message": {
-                    "name": "message",
+                "title": {
+                    "name": "title",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
-                "owner": {
-                    "name": "owner",
+                "status": {
+                    "name": "status",
+                    "isArray": false,
+                    "type": {
+                        "enum": "PostStatus"
+                    },
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "rating": {
+                    "name": "rating",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "content": {
+                    "name": "content",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -97,44 +63,19 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "private",
-                                "operations": [
-                                    "read",
-                                    "create",
-                                    "delete"
-                                ]
-                            },
-                            {
-                                "provider": "userPools",
-                                "ownerField": "owner",
-                                "allow": "owner",
-                                "operations": [
-                                    "read",
-                                    "create",
-                                    "update",
-                                    "delete"
-                                ],
-                                "identityClaim": "cognito:username"
-                            },
-                            {
-                                "allow": "public",
-                                "operations": [
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
                 }
             ]
         }
     },
-    "enums": {},
+    "enums": {
+        "PostStatus": {
+            "name": "PostStatus",
+            "values": [
+                "DRAFT",
+                "PUBLISHED"
+            ]
+        }
+    },
     "nonModels": {},
-    "version": "dbee86a60814d9e09d69bd94c520ffa2"
+    "version": "c8f7b72ad6040a2f04d1500f59aa83e0"
 };

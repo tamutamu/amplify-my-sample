@@ -2,54 +2,14 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateTodo = /* GraphQL */ `
-  subscription OnCreateTodo {
-    onCreateTodo {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onUpdateTodo = /* GraphQL */ `
-  subscription OnUpdateTodo {
-    onUpdateTodo {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onDeleteTodo = /* GraphQL */ `
-  subscription OnDeleteTodo {
-    onDeleteTodo {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
 export const onCreatePost = /* GraphQL */ `
-  subscription OnCreatePost($owner: String) {
-    onCreatePost(owner: $owner) {
+  subscription OnCreatePost {
+    onCreatePost {
       id
-      message
-      owner
+      title
+      status
+      rating
+      content
       createdAt
       updatedAt
       _version
@@ -59,11 +19,13 @@ export const onCreatePost = /* GraphQL */ `
   }
 `;
 export const onUpdatePost = /* GraphQL */ `
-  subscription OnUpdatePost($owner: String) {
-    onUpdatePost(owner: $owner) {
+  subscription OnUpdatePost {
+    onUpdatePost {
       id
-      message
-      owner
+      title
+      status
+      rating
+      content
       createdAt
       updatedAt
       _version
@@ -73,11 +35,13 @@ export const onUpdatePost = /* GraphQL */ `
   }
 `;
 export const onDeletePost = /* GraphQL */ `
-  subscription OnDeletePost($owner: String) {
-    onDeletePost(owner: $owner) {
+  subscription OnDeletePost {
+    onDeletePost {
       id
-      message
-      owner
+      title
+      status
+      rating
+      content
       createdAt
       updatedAt
       _version
